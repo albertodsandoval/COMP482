@@ -113,7 +113,12 @@ public class Project1{
 			//
 			// When you double decrease, we instantly know that there will be n-1-1 (n-2) zig zags. When you do not
 			// double decrease, there will be the max n-1 zig zags.
-			if(list.stream().anyMatch(n -> n > numWithMostFrequency)&&list.stream().anyMatch(n -> n < numWithMostFrequency)){
+			// 
+			// Lastly, if the list is size even, n/2 frequency can still be organized in a way such that we can avoid
+			// double increases or double decreases. For example: 1 2 2 2 3 4
+			// We can do: 2 1 3 2 4 2. Notice how we arent forced to use the 2 X 2 X 2 pattern in an even scenario, this wiggle
+			// room allows us to flip the values in the double increase or decrease
+			if(list.stream().anyMatch(n -> n > numWithMostFrequency)&&list.stream().anyMatch(n -> n < numWithMostFrequency) && list.size()%2==1){
 				System.out.println(list.size()-2);
 			} else {
 				System.out.println(list.size()-1); 
