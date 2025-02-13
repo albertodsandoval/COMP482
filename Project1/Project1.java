@@ -1,3 +1,8 @@
+// Alberto Sandoval
+// Project 1
+// 2/2/2025
+// Read in a set of ints and count max zigzags
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
