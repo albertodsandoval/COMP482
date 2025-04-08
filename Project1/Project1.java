@@ -64,8 +64,10 @@ public class Project1{
 		// obtaining the highest frequency value
 		int highestFrequency = hashmap.get(numWithMostFrequency);
 
+
 		// checking if our most frequent is at or above the max valid frequency threshold
 		if(highestFrequency >= maxValidFrequency){
+
 
 			// loops to test if our most frequent is still above max valid frequency
 			while(highestFrequency > maxValidFrequency){
@@ -113,6 +115,7 @@ public class Project1{
 			//
 			// When you double decrease, we instantly know that there will be n-1-1 (n-2) zig zags. When you do not
 			// double decrease, there will be the max n-1 zig zags.
+<<<<<<< HEAD
 			// 
 			// Lastly, if the list is size even, n/2 frequency can still be organized in a way such that we can avoid
 			// double increases or double decreases. For example: 1 2 2 2 3 4
