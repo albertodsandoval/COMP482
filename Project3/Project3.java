@@ -59,210 +59,142 @@ public class Project3{
 		System.out.println(count);
 
 
-		System.out.println(binaryForwardSearch(arr,k,l,m));
-		System.out.println(binaryBackwardSearch(arr,k,l,m));
+		startTime = System.currentTimeMillis();
 
-
-
+		int kSize = binaryForwardSearch(arr,k,l,m,"k")-binaryBackwardSearch(arr,k,l,m,"k")+1;
+		int lSize = binaryForwardSearch(arr,k,l,m,"l")-binaryBackwardSearch(arr,k,l,m,"l")+1;
+		int mSize = binaryForwardSearch(arr,k,l,m,"m")-binaryBackwardSearch(arr,k,l,m,"m")+1;
+		System.out.println(System.currentTimeMillis()-startTime);
+		System.out.println(kSize*lSize*mSize);
 
 	}
-	static int binaryForwardSearchK(int[][][] arr, int k, int l, int m){
+	static int binaryForwardSearch(int[][][] arr, int k, int l, int m, String dim){
 
 		int middleK = k/2;
-		int middleL = l/2;
+		int middleL = l/2; //point with guaranteed 1
 		int middleM = m/2;
-		int low = middleK;
-		int high = k-1;
 
-		if((arr[middleK][middleL][middleM]==1 && arr[middleK-1][middleL][middleM]==0 && arr[middleK+1][middleL][middleM]==1) || (arr[middleK][middleL][middleM]==1 && arr[middleK-1][middleL][middleM]==1 && arr[middleK+1][middleL][middleM]==0)){
-			System.out.println("K, L, M: "+middleK+" "+middleL+" "+middleM);
-			System.out.println("Value: "+ arr[middleK][middleL][middleM]);
-			return middleK;
-		}
-
-		while(low<=high){
-			int mid = low + (high - low)/2;
-			System.out.println("K, L, M: "+mid+" "+middleL+" "+middleM);
-			System.out.println("Value: "+ arr[mid][middleL][middleM]);
-
-
-
-			if((arr[mid][middleL][middleM]==1 && arr[mid-1][middleL][middleM]==0 && arr[mid+1][middleL][middleM]==1) || (arr[mid][middleL][middleM]==1 && arr[mid-1][middleL][middleM]==1 && arr[mid+1][middleL][middleM]==0)){
-				return mid;
-			}
-			else if (arr[mid][middleL][middleM]==1){
-				low = mid+1;
-			}
-			else if (arr[mid][middleL][middleM]==0){
-				high = mid-1;
-			}
-		}
-		return -1;
-	}
-	static int binaryBackwardSearchK(int[][][] arr, int k, int l, int m){
-
-		int middleK = k/2;
-		int middleL = l/2;
-		int middleM = m/2;
+		//initializes vals
 		int low = 0;
-		int high = middleK-1;
+		int high = 0;
 
-		if((arr[middleK][middleL][middleM]==1 && arr[middleK-1][middleL][middleM]==0 && arr[middleK+1][middleL][middleM]==1)){
-			System.out.println("K, L, M: "+middleK+" "+middleL+" "+middleM);
-			System.out.println("Value: "+ arr[middleK][middleL][middleM]);
-			return middleK;
+		int kInc = 0;
+		int lInc = 0; //so we can increment or decrement on only one axis
+		int mInc = 0;
+
+		//sets values based on param
+		switch(dim){
+			case "k":
+				low = middleK;
+				high = k-1;
+				kInc =1;
+				break;
+			case "l":
+				low = middleL;
+				high = l-1;
+				lInc = 1;
+				break;
+			case "m":
+				low = middleM;
+				high = m-1;
+				mInc = 1;
+				break;
 		}
 
+		// checks if the guaranteed 1 middle point happens to be the edge
+		if((arr[middleK][middleL][middleM]==1 && arr[middleK-kInc][middleL-lInc][middleM-mInc]==1 && arr[middleK+kInc][middleL+lInc][middleM+mInc]==0)){
+			if(dim == "k")
+				return middleK;
+			else if(dim == "l")
+				return middleL;
+			else if(dim == "m")
+				return middleM;
+		}
+
+		// binary search
 		while(low<=high){
 			int mid = low + (high - low)/2;
-			System.out.println("K, L, M: "+mid+" "+middleL+" "+middleM);
-			System.out.println("Value: "+ arr[mid][middleL][middleM]);
 
+			if(dim == "k")
+				middleK = mid;
+			else if(dim == "l")
+				middleL = mid;
+			else if(dim == "m")
+				middleM = mid;
 
-
-			if((arr[mid][middleL][middleM]==1 && arr[mid-1][middleL][middleM]==0 && arr[mid+1][middleL][middleM]==1)){
+			if((arr[middleK][middleL][middleM]==1 && arr[middleK-kInc][middleL-lInc][middleM-mInc]==1 && arr[middleK+kInc][middleL+lInc][middleM+mInc]==0)){
 				return mid;
 			}
-			else if (arr[mid][middleL][middleM]==1){
+			else if (arr[middleK][middleL][middleM]==1){
 				low = mid+1;
 			}
-			else if (arr[mid][middleL][middleM]==0){
+			else if (arr[middleK][middleL][middleM]==0){
 				high = mid-1;
 			}
 		}
 		return -1;
 	}
-	static int binaryForwardSearchL(int[][][] arr, int k, int l, int m){
+	static int binaryBackwardSearch(int[][][] arr, int k, int l, int m, String dim){
 
 		int middleK = k/2;
-		int middleL = l/2;
+		int middleL = l/2;  //the point with a guaranteed 1
 		int middleM = m/2;
-		int low = middleL;
-		int high = l-1;
 
-		if((arr[middleK][middleL][middleM]==1 && arr[middleK-1][middleL][middleM]==0 && arr[middleK+1][middleL][middleM]==1) || (arr[middleK][middleL][middleM]==1 && arr[middleK-1][middleL][middleM]==1 && arr[middleK+1][middleL][middleM]==0)){
-			System.out.println("K, L, M: "+middleK+" "+middleL+" "+middleM);
-			System.out.println("Value: "+ arr[middleK][middleL][middleM]);
-			return middleK;
-		}
-
-		while(low<=high){
-			int mid = low + (high - low)/2;
-			System.out.println("K, L, M: "+mid+" "+middleL+" "+middleM);
-			System.out.println("Value: "+ arr[mid][middleL][middleM]);
-
-
-
-			if((arr[mid][middleL][middleM]==1 && arr[mid-1][middleL][middleM]==0 && arr[mid+1][middleL][middleM]==1) || (arr[mid][middleL][middleM]==1 && arr[mid-1][middleL][middleM]==1 && arr[mid+1][middleL][middleM]==0)){
-				return mid;
-			}
-			else if (arr[mid][middleL][middleM]==1){
-				low = mid+1;
-			}
-			else if (arr[mid][middleL][middleM]==0){
-				high = mid-1;
-			}
-		}
-		return -1;
-	}
-	static int binaryBackwardSearchL(int[][][] arr, int k, int l, int m){
-
-		int middleK = k/2;
-		int middleL = l/2;
-		int middleM = m/2;
+		//initializing val's for modularity
 		int low = 0;
-		int high = middleK-1;
+		int high = 0;
 
-		if((arr[middleK][middleL][middleM]==1 && arr[middleK-1][middleL][middleM]==0 && arr[middleK+1][middleL][middleM]==1)){
-			System.out.println("K, L, M: "+middleK+" "+middleL+" "+middleM);
-			System.out.println("Value: "+ arr[middleK][middleL][middleM]);
-			return middleK;
+		int kInc = 0;
+		int lInc = 0;  //so we can test next/previous on only one axis
+		int mInc = 0;
+
+		//sets values based on param
+		switch(dim){
+			case "k":
+				high = middleK-1;
+				kInc =1;
+				break;
+			case "l":
+				high = middleL-1;
+				lInc = 1;
+				break;
+			case "m":
+				high = middleM-1;
+				mInc = 1;
+				break;
 		}
 
+		// checks if the guaranteed 1 middle point happens to be the edge
+		if((arr[middleK][middleL][middleM]==1 && arr[middleK-kInc][middleL-lInc][middleM-mInc]==0 && arr[middleK+kInc][middleL+lInc][middleM+mInc]==1)){
+			if(dim == "k")
+				return middleK;
+			else if(dim == "l")
+				return middleL;
+			else if(dim == "m")
+				return middleM;
+		}
+
+		//binary search
 		while(low<=high){
 			int mid = low + (high - low)/2;
-			System.out.println("K, L, M: "+mid+" "+middleL+" "+middleM);
-			System.out.println("Value: "+ arr[mid][middleL][middleM]);
 
+			if(dim == "k")
+				middleK = mid;
+			else if(dim == "l")
+				middleL = mid;
+			else if(dim == "m")
+				middleM = mid;
 
-
-			if((arr[mid][middleL][middleM]==1 && arr[mid-1][middleL][middleM]==0 && arr[mid+1][middleL][middleM]==1)){
+			if((arr[middleK][middleL][middleM]==1 && arr[middleK-kInc][middleL-lInc][middleM-mInc]==0 && arr[middleK+kInc][middleL+lInc][middleM+mInc]==1)){
 				return mid;
 			}
-			else if (arr[mid][middleL][middleM]==1){
-				low = mid+1;
-			}
-			else if (arr[mid][middleL][middleM]==0){
+			else if (arr[middleK][middleL][middleM]==1){
 				high = mid-1;
+			}
+			else if (arr[middleK][middleL][middleM]==0){
+				low = mid+1;
 			}
 		}
 		return -1;
 	}
-		static int binaryForwardSearchM(int[][][] arr, int k, int l, int m){
-
-		int middleK = k/2;
-		int middleL = l/2;
-		int middleM = m/2;
-		int low = middleK;
-		int high = k-1;
-
-		if((arr[middleK][middleL][middleM]==1 && arr[middleK-1][middleL][middleM]==0 && arr[middleK+1][middleL][middleM]==1) || (arr[middleK][middleL][middleM]==1 && arr[middleK-1][middleL][middleM]==1 && arr[middleK+1][middleL][middleM]==0)){
-			System.out.println("K, L, M: "+middleK+" "+middleL+" "+middleM);
-			System.out.println("Value: "+ arr[middleK][middleL][middleM]);
-			return middleK;
-		}
-
-		while(low<=high){
-			int mid = low + (high - low)/2;
-			System.out.println("K, L, M: "+mid+" "+middleL+" "+middleM);
-			System.out.println("Value: "+ arr[mid][middleL][middleM]);
-
-
-
-			if((arr[mid][middleL][middleM]==1 && arr[mid-1][middleL][middleM]==0 && arr[mid+1][middleL][middleM]==1) || (arr[mid][middleL][middleM]==1 && arr[mid-1][middleL][middleM]==1 && arr[mid+1][middleL][middleM]==0)){
-				return mid;
-			}
-			else if (arr[mid][middleL][middleM]==1){
-				low = mid+1;
-			}
-			else if (arr[mid][middleL][middleM]==0){
-				high = mid-1;
-			}
-		}
-		return -1;
-	}
-	static int binaryBackwardSearchM(int[][][] arr, int k, int l, int m){
-
-		int middleK = k/2;
-		int middleL = l/2;
-		int middleM = m/2;
-		int low = 0;
-		int high = middleK-1;
-
-		if((arr[middleK][middleL][middleM]==1 && arr[middleK-1][middleL][middleM]==0 && arr[middleK+1][middleL][middleM]==1)){
-			System.out.println("K, L, M: "+middleK+" "+middleL+" "+middleM);
-			System.out.println("Value: "+ arr[middleK][middleL][middleM]);
-			return middleK;
-		}
-
-		while(low<=high){
-			int mid = low + (high - low)/2;
-			System.out.println("K, L, M: "+mid+" "+middleL+" "+middleM);
-			System.out.println("Value: "+ arr[mid][middleL][middleM]);
-
-
-
-			if((arr[mid][middleL][middleM]==1 && arr[mid-1][middleL][middleM]==0 && arr[mid+1][middleL][middleM]==1)){
-				return mid;
-			}
-			else if (arr[mid][middleL][middleM]==1){
-				low = mid+1;
-			}
-			else if (arr[mid][middleL][middleM]==0){
-				high = mid-1;
-			}
-		}
-		return -1;
-	}
-
 }
